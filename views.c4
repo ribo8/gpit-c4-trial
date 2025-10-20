@@ -1,0 +1,51 @@
+//Create the views
+views {
+    view index {
+        title 'Landscape View - GPIT'
+        include *
+    }
+
+    view of foundationSystem {
+        title 'GP Foundation System'
+        include *
+    }
+
+    view of foundationSystem.dsicAppointmentsManagementGP {
+        title 'DSIC Appointments Management - GP'
+        include *
+        include foundationSystem
+        //include element.tag = #appointments
+    }
+
+    view of foundationSystem.dsicPrescribingGP {
+        title 'DSIC Prescribing - GP'
+        include *
+        include foundationSystem
+       // include element.tag = #prescribing
+    }
+
+    view of foundationSystem.dsicReferralManagementGP {
+        title 'DSIC Referrals Management - GP'
+        include *
+        include foundationSystem
+    }
+    
+    view AppointmentsManagement {
+        include element.tag = #appointments
+
+    }
+    view  PFS {
+        #pfs
+        title 'GPIT Patient Facing Services (PFS)'
+         include element.tag = #pfs
+    }
+
+    view Reporting {
+        #reporting
+        title 'GPIT Reporting'
+        include element.tag = #reporting
+    }
+
+
+}
+

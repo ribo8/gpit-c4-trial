@@ -1,0 +1,306 @@
+
+
+model {
+
+    foundationSystem = system  {
+        #appointments, #prescribing
+        title 'GP Foundation System'
+        // Shared Components
+        component foundationSystemUI {
+            title 'UI'
+        }
+        component im1Bulk {
+            #reporting, #appointments, #prescribing
+            title 'IM1 Bulk'
+        }
+
+        component pomi {
+            #reporting, #appointments, #prescribing
+            title 'Patient Online Management Information (POMI)'
+            description 'POMI Management Information Extracts'
+        }
+        component gpdpr {
+            #reporting, #appointments
+            title 'GP Data for Planning and Research (GPDPR)'
+            description 'Extract of Patient and Appointment Data for seconday uses'
+        }
+
+        component demographics {
+            #appointments, #prescribing
+            title 'Demographics Management'
+            summary 'Manage demographics within the foundation system'
+        }
+
+        component terminology {
+            #prescribing
+            title 'Terminology Management'
+            summary 'Manage terminology within the foundation system'
+        }
+
+        component decisionSupport {
+            #prescribing
+            title 'Clinical Decision Support'
+            summary 'Support clinical decision making'
+        }
+
+        database foundationSystemDatabase {
+            #appointments,#pfs,#prescribing,#reporting
+            title 'Foundation System Database(s)'
+            summary 'Database(s) for the foundation system'
+        }
+        
+        
+        // Appointments Management - GP Capability
+        dsicAppointmentsManagementGP = gpfoundationModule {
+            #appointments
+            title 'DSIC Appointments Management - GP'
+            summary 'Logical view of the capability'
+            component im1PFSAppointmentsManagement {
+                #pfs,#appointments
+                title 'IM1 PFS - Appointments Management'
+                summary 'Allow patients to manage appointments'
+                technology 'Bespoke Web API'
+            }
+            component im1PracticeAppointmentsManagement {
+                #appointments
+                title 'IM1 Practice - Appointments Management'
+                summary 'Allow in-practice systems integration with the foundation system to book GP appointments'
+                technology 'Bespoke (usually desktop client integration)'
+            }
+            component gpConnectAppointmentsManagementProviderAPI {
+                #appointments
+                title 'GP Connect Appointment Management - FHIR API'
+                summary 'Manage GP practice appointments between different systems'
+                technology 'FHIR STU3 - CareConnect'
+                link https://digital.nhs.uk/developer/api-catalogue/gp-connect-appointment-management-fhir 'Documentation'
+            }
+            component gpConnectAppointmentsManagementConsumer {
+                #appointments
+                title 'GP Connect Appointments Management consumer'
+                summary 'Allows booking of appointments in different practices'
+            }
+            component gpad {
+                #reporting, #appointments
+                title 'GP Appointment Data (GPAD)'
+                summary 'Appointment data extract for secondary uses'
+            }
+        }
+
+
+        dsicPrescribingGP = gpfoundationModule {
+            title 'DISC Prescribing - GP'
+            summary 'Logical view of the capability'
+            link https://nhse-dsic.atlassian.net/wiki/x/zgXrUg 
+            component im1PFSPrescriptionManagement {
+                #prescribing
+                title 'IM1 PFS - Prescription Management'
+                summary 'Allow patients to manage their GP prescriptions'
+                technology 'Bespoke Web API'
+            }
+
+            component im1PracticePrescriptionsManagement {
+                #prescribing
+                title 'IM1 Practice - Prescription Management'
+                summary 'Allow in-practice systems integration with the foundation system to manage prescriptions'
+                technology 'Bespoke (usually desktop client integration)'
+            }
+
+            component electonicPrescribing {
+                #prescribing
+                title 'Paper and Electronic Prescribing'
+                summary 'Prescribing of paper and electronic prescriptions'
+            }
+
+
+
+        }
+
+        dsicReferralManagementGP = gpfoundationModule{
+            title 'DSIC Referral Management - GP'
+            summary 'Refer patients to other care settings'
+            component im1PracticeReferrals {
+                title 'IM1 Practice - Referrals'
+                summary 'Refer patients'
+                technology 'Bespoke (usually desktop client integration)'
+            }
+
+            component outboundReferrals {
+                title 'Oubound Referrals'
+                summary 'Refer patients to other care settings'
+            }
+
+        }
+
+
+        dsicPatientInformationMaintenanceGP = gpfoundationModule {
+            title 'DSIC Patient Information Management - GP'
+            summary 'Logical view of the capability'
+            component im1PFSGetRecord {
+                #pfs
+                title 'IM1 PFS - Get Record'
+                summary 'Allow patients to view their GP record'
+                technology 'Bespoke Web API'
+            }
+        }
+    }
+    
+
+
+   
+
+    //relationships
+    //external GPC
+    crossCareSettingHCP -> hcpClinicalApplication 'Uses Application'
+    crossCareSettingHCP -> cis2 'Authenticates using'
+    //hcpClinicalApplication -> pds 'Lookup Patient GP practice'
+    //hcpClinicalApplication -> sds 'Lookup Endpoint'
+    //hcpClinicalApplication -> uecDoS 'Find Care Setting'
+
+    //external Patient
+    patient -> nhsLogin 'Authenticates using'
+    patientProxy -> nhsLogin 'Authenticates using'
+    patient -> pfsApp 'Access NHS digital services'
+    patientProxy -> pfsApp 'Access NHS digital services'
+
+    //foundation system
+    gp -> foundationSystemUI 'Uses Application'
+    practiceClinicalStaff -> foundationSystemUI 'Uses Application'
+    practiceAdminStaff -> foundationSystemUI 'Uses Application'
+    foundationSystemUI -> dsicAppointmentsManagementGP 'Uses module'
+    foundationSystemUI -> dsicPrescribingGP 'Uses module'
+    foundationSystemUI -> dsicPatientInformationMaintenanceGP 'Uses module'
+    foundationSystemUI -> dsicReferralManagementGP 'Uses module'
+    gp -> cis2 'Authenticates using'
+    practiceClinicalStaff -> cis2 
+    {
+        title 'Authenticates using'
+        technology 'OIDC/Oauth2'
+    }
+    practiceAdminStaff -> cis2 
+     {
+        title 'Authenticates using'
+        technology 'OIDC/Oauth2'
+    }
+    foundationSystem -> nhsLogin 
+    {
+        title 'Validate patient identity'
+        technology 'OIDC/Oauth2'
+    
+    }
+    pomi -> seft 'Provide the POMI extracts'
+    gpdpr -> mesh 'Provide the GPDPR extracts'
+    reportingSystem -> im1Bulk {
+        title 'Extracts patient and appointment data'
+        technology 'bespoke' 
+    }
+    demographics -> pds {
+        title 'Manage demographics'
+        technology 'HL7v3 or FHIR R4'
+    }
+    terminology -> trud {
+        title 'Retrieve SNOMED CT, dm+d, ODS, etc'
+        technology 'CSV'
+    }
+    decisionSupport -> clinicalDecisionSupport {
+        title 'Use external clinical decision support'
+        technology 'bespoke'
+    }
+    //apppointments
+    hcpClinicalApplication -> gpConnectAppointmentsManagementProviderAPI {
+        title 'Manages GP appointments across care settings'
+        navigateTo gpConnectAppontmentsView
+
+    }
+    /*
+    hcpClinicalApplication -> ssp {
+        title 'Manages GP appointments across care settings'
+        technology 'FHIR STU3 CareConnect, REST, TLS-ma'
+    }
+    
+    ssp -> gpConnectAppointmentsManagementProviderAPI {
+        title 'Forwards request to GP system provider'
+        technology 'FHIR STU3 CareConnect, REST, TLS-ma'
+    }
+    
+    */
+
+    pfsApp -> im1PFSAppointmentsManagement {
+        title 'Allow Patient to manage their GP appointments'
+        technology 'Web API, bespoke'
+    } 
+    inPracticeSystem -> im1PracticeAppointmentsManagement {
+        title 'Allow healthcare professionals to manage appointments'
+        technology 'bespoke'
+    }
+    
+    im1PFSAppointmentsManagement -> foundationSystemDatabase 'Read/Write data'
+   
+    
+    im1PracticeAppointmentsManagement -> foundationSystemDatabase 'Read/Write data'
+    gpConnectAppointmentsManagementProviderAPI -> foundationSystemDatabase 'Read/Write data'
+    im1Bulk -> foundationSystemDatabase 'Extracts appointments data'
+    gpad -> foundationSystemDatabase 'Extract appointments data'
+    gpad -> seft 'Provide GPAD extract'
+    gpdpr -> foundationSystemDatabase 'Extract appointments data'
+
+    gpConnectAppointmentsManagementConsumer -> gpConnectAppointmentsManagementProviderAPI {
+        navigateTo gpConnectAppontmentsView 
+        title 'Book appointments in other GP practices'
+    }
+    
+    //prescribing
+    pfsApp -> im1PFSPrescriptionManagement {
+        title 'Allow patients to view prescriptions and request repeat prescriptions'
+        technology 'bespoke'
+    }
+    inPracticeSystem -> im1PracticePrescriptionsManagement {
+        title 'Allow healthcare professionals to manage prescriptions'
+        technology 'bespoke'
+    }
+    im1PracticePrescriptionsManagement -> foundationSystemDatabase 'Read/Write data'
+    im1Bulk -> foundationSystemDatabase 'Extracts prescribing data'
+    electonicPrescribing -> foundationSystemDatabase 'Read/Write data'
+    electonicPrescribing -> uecDoS {
+        title 'Identify pharmacies'
+        technology '????'
+    }
+    electonicPrescribing -> demographics {
+        title 'Trace patients and manage nominations'
+    }
+    electonicPrescribing -> decisionSupport 'Use decision support for prescribing'
+    electonicPrescribing -> digitalSignatureService 'Apply Advanced Electronic Signature to the prescription'
+    electonicPrescribing -> sds 'Identify endpoints for EPS'
+    electonicPrescribing -> eps {
+        title 'Send signed prescription'
+        technology 'HL7v3 or FHIR STU3'
+    }
+    electonicPrescribing -> prescriptionPrinter 'Print prescriptions and tokens'
+    gpdpr -> foundationSystemDatabase 'Extracts prescribing data'
+
+
+    //Referalls
+    inPracticeSystem -> im1PracticeReferrals{
+        title 'Allow healthcare professionals to manage referrals'
+        technology 'bespoke'
+    }
+
+    outboundReferrals -> ers {
+        title 'Refer to secondary care'
+        technology 'HL7v3 or FHIR STU3'
+    }
+
+    outboundReferrals -> bars {
+        title 'Refer to pharmacy'
+        technology 'FHIR R4 UK Core'
+
+    }
+
+    outboundReferrals -> foundationSystemDatabase 'Read/Write data'
+    im1PracticeReferrals -> foundationSystemDatabase 'Read/Write data'
+
+
+    //PIM
+    pfsApp -> im1PFSGetRecord 'Allow Patient to view their GP record'
+
+}
+

@@ -1,0 +1,36 @@
+specification {
+    element actor {
+        style {
+            shape person
+            color amber
+        }
+    }
+    element system
+    element component
+    element database {
+        style {
+            shape storage
+            color sky
+        }
+    }
+    element externalSystem {
+        style {
+            color gray
+        }
+    }
+    element gpfoundationModule {
+        style{
+            color indigo
+        }
+    }
+
+    element desktopDevice {
+        style {
+            color amber
+        }
+    }
+    tag appointments
+    tag prescribing
+    tag pfs
+    tag reporting
+}

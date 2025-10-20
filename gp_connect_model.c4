@@ -1,0 +1,96 @@
+ model {
+    generciGPConnectConsumer = system {
+        title 'GP Connect Consumer'
+    }
+
+    gpcModel_gpConnectApppointmentsManagementProviderAPI = system {
+        title 'GP Connect Appointments Management Provider API'
+        technology 'FHIR STU3 CareConnnect'
+    }
+
+    gpcModel_gpConnectAccessRecordConsumer = system {
+        title 'GP Connect Access Record Consumer'
+    }
+    
+    gpcModel_gpConnectAccessRecordStructuredProviderAPI = system {
+        title 'GP Connect Access Record HTML Provider API'
+        technology 'FHIR STU3 CareConnnect'
+    }
+
+    gpcModel_gpConnectAccessRecordHTMLProviderAPI = system {
+        title 'GP Connect Access Record HTML Provider API'
+        technology 'FHIR DSTU2 CareConnnect'
+    }
+
+}  
+    
+views {
+        
+    
+    dynamic view gpConnectAppontmentsView {
+        
+        title 'GP Connect Appointments'
+        
+
+        parallel {
+            
+            generciGPConnectConsumer -> pds 'Identify patient\'s GP practice'
+            generciGPConnectConsumer -> uecDoS {
+                notes 'Either use PDS or DoS to locate a GP practice ODS code'
+                title 'Identify practice to book an appointment'
+            }
+        }
+        
+        generciGPConnectConsumer -> sds 'Identify GP practice endpoint'
+        generciGPConnectConsumer -> ssp {
+            title 'Call GP connect API via forward proxy'
+            technology 'FHIR STU3 CareConnect, TLS-MA'
+        }
+        ssp -> foundationSystem.dsicAppointmentsManagementGP.gpConnectAppointmentsManagementProviderAPI {
+            title 'Pass call to GP Connect supplier API'
+            technology 'FHIR STU3 CareConnect, TLS-MA'
+        }
+        
+        
+    }
+
+    dynamic view gpConnectAccessRecordStructuredView {
+        title 'GP Connect Access Record Structured'
+
+        generciGPConnectConsumer -> pds 'Identify patient\'s GP practice'
+        generciGPConnectConsumer -> sds 'Identify GP practice endpoint'
+
+        generciGPConnectConsumer -> ssp {
+            title 'Call GP connect API via forward proxy'
+            technology 'FHIR STU3 CareConnect, TLS-MA'
+        }
+
+        ssp -> gpcModel_gpConnectAccessRecordStructuredProviderAPI {
+            title 'Pass call to GP Connect supplier API'
+            technology 'FHIR STU3 CareConnect, TLS-MA'
+        }
+
+
+
+    }
+
+    dynamic view gpConnectAccessRecordHTMLView {
+        title 'GP Connect Access Record Structured'
+
+        generciGPConnectConsumer -> pds 'Identify patient\'s GP practice'
+        generciGPConnectConsumer -> sds 'Identify GP practice endpoint'
+
+        generciGPConnectConsumer -> ssp {
+            title 'Call GP connect API via forward proxy'
+            technology 'FHIR DSTU2 CareConnect, TLS-MA'
+        }
+        
+        ssp -> gpcModel_gpConnectAccessRecordStructuredProviderAPI {
+            title 'Pass call to GP Connect supplier API'
+            technology 'FHIR DSTU2 CareConnect, TLS-MA'
+        }
+
+
+
+    }
+}

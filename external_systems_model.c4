@@ -1,0 +1,115 @@
+model {
+    // Users
+    gp = actor {
+        title 'General Practitioner'
+    } 
+    practiceAdminStaff = actor {
+        title 'GP Practice Admin Staff'
+    }
+    practiceClinicalStaff = actor {
+        title 'GP Practice Clinical Staff'
+    }
+    patient = actor {
+        #pfs
+        title 'Patient'
+    } 
+    patientProxy = actor {
+        #pfs
+        title 'PatientProxy'
+    }
+    crossCareSettingHCP = actor {
+        title 'Cross Care Setting Healthcare'
+    }
+
+    //external systems
+    nhsLogin =   system {
+        #pfs
+        title 'NHS login'
+    }
+    cis2 = externalSystem {
+        title 'CIS2'
+    }
+    pfsApp = externalSystem {
+        #pfs, #appointments
+        title 'Patient Facing Services Application'
+    }
+    inPracticeSystem = externalSystem {
+        #appointments
+        title 'In practice System'
+        summary 'Ancillary system within the practice'
+    }
+    reportingSystem = externalSystem {
+        #reporting, #appointments
+        title 'Reporting System'
+    } 
+    hcpClinicalApplication = externalSystem {
+        #appointments, #prescribing
+        title 'HCP Clinical Application'
+    } 
+    seft = externalSystem {
+        #reporting, #appointments
+        title 'Secure Electronic File Transfer (SEFT)'
+    }
+    mesh = externalSystem {
+        #reporting, #appointments
+        title 'Message Exchange for Social and Healthcare (MESH)'
+    } 
+    pds = externalSystem {
+        #appointments, #prescribing
+        title 'Personal Demographics Service (PDS)'
+    }
+    uecDoS = externalSystem {
+        #appointments, #prescribing
+        title 'Urgent and Emergency Care Directory of Services (UEC DoS)'
+    }
+    
+    sds = externalSystem 
+    {
+        title 'Spine Directory Services (SDS)'
+    }
+    ssp = externalSystem {
+        #appointments
+        title 'Spine Security Proxy (SSP)'
+        summary 'Forwarding proxy'
+    }
+
+    digitalSignatureService = externalSystem {
+        #prescribing
+        title 'Digital Signature Service'
+        summary 'Remote Prescription Signing'
+    }
+
+    eps = externalSystem {
+        title 'Electronic Prescription Service'
+        summary 'Prescribe electronic prescriptions'
+        technology 'HL7v3/FHIR STU3'
+    }
+
+    trud = externalSystem {
+        #prescribing
+        title 'Technology Reference Update Distribution (TRUD)'
+        summary  'Download NHS reference files'
+    }
+
+    clinicalDecisionSupport = externalSystem {
+        #prescribing
+        title 'Clinical Decision Support'
+        summary 'System to support clinical decision making'
+    }
+
+    prescriptionPrinter = desktopDevice {
+        #prescribing
+        title 'Prescription & Prescription Token printer'
+        summary 'Print EPS tokens and paper prescriptions that require wet signatures'
+    }
+
+    ers = externalSystem {
+        title 'e-Referral Service (e-RS)'
+        summary ' efer patients to service providers.'
+    }
+
+    bars = externalSystem {
+        title 'Booking and Referral Standard (BaRS)'
+        summary 'Bookings and Referrals across care settings'
+    }
+}
