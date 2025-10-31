@@ -1,0 +1,18 @@
+model {
+    losingPractice = system {
+        title 'Losing practice'
+    }
+
+    winningPractice = system {
+        title 'Winning Practice'
+    }
+
+
+}  
+views {
+    dynamic view normalGP2GP {
+        title 'GP2GP HL7v3'
+        
+        losingPractice -> winningPractice
+    }
+}

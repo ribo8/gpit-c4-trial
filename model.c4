@@ -41,6 +41,22 @@ model {
             #prescribing
             title 'Clinical Decision Support'
             summary 'Support clinical decision making'
+        
+        }
+
+        component meshClient {
+            title 'Mesh Client'
+            summary 'Retrieve/Send MESH messages'
+        }
+
+        component messageDistributer {
+            title 'Message Distributer'
+            summary 'Distribute messages to the correct handler'
+        }
+
+        component mnsEventHandler {
+            title 'MNS Event Handler'
+            summary 'Handle events from MNS'
         }
 
         database foundationSystemDatabase {
@@ -48,6 +64,7 @@ model {
             title 'Foundation System Database(s)'
             summary 'Database(s) for the foundation system'
         }
+
         
         
         // Appointments Management - GP Capability
@@ -55,6 +72,7 @@ model {
             #appointments
             title 'DSIC Appointments Management - GP'
             summary 'Logical view of the capability'
+            link https://nhse-dsic.atlassian.net/wiki/x/TQXrUg
             component im1PFSAppointmentsManagement {
                 #pfs,#appointments
                 title 'IM1 PFS - Appointments Management'
@@ -79,6 +97,8 @@ model {
                 title 'GP Connect Appointments Management consumer'
                 summary 'Allows booking of appointments in different practices'
             }
+
+
             component gpad {
                 #reporting, #appointments
                 title 'GP Appointment Data (GPAD)'
@@ -91,6 +111,17 @@ model {
             title 'DISC Prescribing - GP'
             summary 'Logical view of the capability'
             link https://nhse-dsic.atlassian.net/wiki/x/zgXrUg 
+            
+            
+            component gpConnectPFSPrescriptionManagement {
+                #pfs
+                title 'GP Connect (Patient Facing) Prescriptions - FHIR API'
+                summary 'Manage a patient\'s prescriptions'
+                technology 'FHIR R4 UK Core, OIDC/Oauth2, RESTful'
+                link https://digital.nhs.uk/developer/api-catalogue/gp-connect-patient-facing-prescriptions-fhir 'API Catalogue'
+            }
+            
+            
             component im1PFSPrescriptionManagement {
                 #prescribing
                 title 'IM1 PFS - Prescription Management'
@@ -115,9 +146,11 @@ model {
 
         }
 
-        dsicReferralManagementGP = gpfoundationModule{
+        dsicReferralManagementGP = gpfoundationModule {
             title 'DSIC Referral Management - GP'
             summary 'Refer patients to other care settings'
+            link https://nhse-dsic.atlassian.net/wiki/x/rgPrUg
+            
             component im1PracticeReferrals {
                 title 'IM1 Practice - Referrals'
                 summary 'Refer patients'
@@ -135,12 +168,154 @@ model {
         dsicPatientInformationMaintenanceGP = gpfoundationModule {
             title 'DSIC Patient Information Management - GP'
             summary 'Logical view of the capability'
+
             component im1PFSGetRecord {
                 #pfs
                 title 'IM1 PFS - Get Record'
                 summary 'Allow patients to view their GP record'
                 technology 'Bespoke Web API'
             }
+
+            component im1PFSCommunicateWithPractice {
+                #pfs
+                title 'IM1 PFS - Communicate with Practice'
+                summary 'Allow patients to message their GP practice'
+                technology 'Bespoke Web API'
+            }
+
+            component gpConnectPFSGetRecord {
+                #pfs
+                title 'GP Connect (Patient Facing) Access Record - FHIR API'
+                summary 'Allow patients to view their GP record'
+                technology 'FHIR STU3 - CareConnect, OIDC/Oauth2'
+                link https://digital.nhs.uk/developer/api-catalogue/gp-connect-patient-facing-access-record-fhir 'API Catalogue'
+            }
+
+            component gpConnectPFSPermissions {
+                #pfs
+                title 'GP Connect (Patient Facing) User Permissions API'
+                summary 'Manage a patient\'s permissions to access their medical records and services at their GP practice.'
+                technology 'JSON, OIDC/Oauth2'
+                link https://digital.nhs.uk/developer/api-catalogue/gp-connect-patient-facing-user-permissions 'API Catalogue'
+            }
+
+            component gpConnectAccessDocument {
+                title 'GP Connect Access Document - FHIR API'
+                summary 'Retrieve unstructured documents from a patient\'s GP practice record.'
+                technology 'FHIR STU3 - CareConnect, RESTful, TLS-MA'
+                link https://digital.nhs.uk/developer/api-catalogue/gp-connect-access-document-fhir 'API Catalogue'
+            }
+            
+            component gpConnectAccessRecordStructured {
+                title 'GP Connect Access Record: Structured - FHIR API'
+                summary 'Retrieve structured information from a patient\'s GP practice record.'
+                technology 'FHIR STU3 - CareConnect, FHIR Operation, RPC, TLS-MA'
+                link https://digital.nhs.uk/developer/api-catalogue/gp-connect-access-record-structured-fhir 'API Catalogue'
+            }
+
+            component gpConnectAccessRecordHTML {
+                title 'GP Connect Access Record: HTML - FHIR API'
+                summary 'View a patient\'s GP practice record, with read-only access'
+                technology 'FHIR DSTU2, FHIR Operation, RPC, TLS-MA'
+                link https://digital.nhs.uk/developer/api-catalogue/gp-connect-access-record-html-fhir 'API Catalogue'
+
+            }
+
+            component gpConnectSendDocument {
+                title 'GP Connect Send Document - FHIR'
+                summary 'Send a PDF consultation summary to a registered GP practice'
+                technology 'FHIR STU3 - CareConnect'
+                link https://digital.nhs.uk/developer/api-catalogue/gp-connect-send-document-fhir 'API Catalogue'
+            }
+
+
+            component gpConnectUpdateRecord {
+                title 'GP Connect Update Record'
+                summary 'Update a patient\'s GP record from a community pharmacy with structured data'
+                technology 'FHIR STU3 - CareConnect'
+                link https://digital.nhs.uk/developer/api-catalogue/gp-connect-update-record 'API Catalogue'
+            }
+
+            component gpRegistrationsMI {
+                title 'GP Registrations Management Information API'
+                summary 'Send real-time management information about GP registrations to us at NHS England'
+                technology 'JSON, RESTful, App Restricted - API Key'
+                link https://digital.nhs.uk/developer/api-catalogue/gp-registrations-management-information 'API Catalogue'
+            }
+
+
+
+            component im1PracticePatientInformationMaintenance {
+                title 'IM1 Practice - Patient Information Maintenance'
+                summary 'Allow in-practice systems integration with the foundation system to manage Patient Record and Demographics'
+            }
+
+            component gp2gp {
+                title 'GP2GP'
+                summary 'Transfer patients records between practices'
+                technology 'HL7v3'
+
+            }
+
+            component gpRegistration {
+                title 'GP Registration'
+                summary 'Register new patients at the GP practice'
+            }
+
+            component scrComponent {
+                title 'Summary Care Record (SCR)'
+                summary 'Generate and view SCRs'
+                technology 'HL7v3'
+
+            }
+
+            component pem111 {
+                title '111 PEM'
+                summary 'Receive information from 111'
+                technology 'ITK2, SOAP, CDA'
+                link https://digital.nhs.uk/developer/api-catalogue/nhs-111 'API Catalogue'
+
+            }
+
+            component genericFHIRReceive {
+                title 'Generic FHIR Receive'
+                summary 'GP ITK3 Receiver'
+                technology 'ITK3, FHIR STU3 - CareConnect'
+                link https://nhse-dsic.atlassian.net/wiki/x/twDgiAI 'DSIC Standard'
+            }
+            
+            component tocITK3 {
+                title 'Transfer of Care FHIR messages'
+                summary 'GP ITK3 Receiver'
+                technology 'ITK3, FHIR STU3 - CareConnect'
+                link https://digital.nhs.uk/developer/api-catalogue/transfer-of-care-emergency-care-discharge-fhir 'API Catalogue - Emergency Care Discharge'
+                link https://digital.nhs.uk/developer/api-catalogue/transfer-of-care-inpatient-discharge-fhir 'API Catalogue - Inpatient Discharge'
+                link https://digital.nhs.uk/developer/api-catalogue/transfer-of-care-mental-health-discharge-fhir 'API Catalogue - Mental Health Discharge'
+                link https://digital.nhs.uk/developer/api-catalogue/transfer-of-care-outpatient-clinic-letter-fhir 'API Catalogue - Outpatient Clinic Letter'
+                link https://nhse-dsic.atlassian.net/wiki/x/CQCWxAI 'DSIC Standard'
+
+
+            }
+
+            component digitalMedsITK3 {
+                title 'Digital Meds ITK3 messaging'
+                summary 'Vaccination and Emergency supply of Medications'
+                link https://nhse-dsic.atlassian.net/wiki/x/JoDtgAI 'DSIC Standard'
+                
+            }
+
+            component EdifactMessageHandler {
+                title 'Edifact Message Handler'
+                summary 'Pathology and Screening messages'
+                link https://nhse-dsic.atlassian.net/wiki/x/OATrUg 'DSIC Standard'
+            }
+
+            component gpesExtract {
+                title ' General Practice Extraction Service (GPES)'
+                summary 'General Practice Extraction Service (GPES) collects information and data for a wide range of purposes including providing GP payments.'
+                link https://nhse-dsic.atlassian.net/wiki/x/HgbrUg 'DSIC Standard'
+            }
+
         }
     }
     
@@ -205,24 +380,17 @@ model {
         title 'Use external clinical decision support'
         technology 'bespoke'
     }
+
+    mnsEventHandler -> mns 'Subscribe/Retrieve Events'
+
+
     //apppointments
     hcpClinicalApplication -> gpConnectAppointmentsManagementProviderAPI {
         title 'Manages GP appointments across care settings'
         navigateTo gpConnectAppontmentsView
 
     }
-    /*
-    hcpClinicalApplication -> ssp {
-        title 'Manages GP appointments across care settings'
-        technology 'FHIR STU3 CareConnect, REST, TLS-ma'
-    }
     
-    ssp -> gpConnectAppointmentsManagementProviderAPI {
-        title 'Forwards request to GP system provider'
-        technology 'FHIR STU3 CareConnect, REST, TLS-ma'
-    }
-    
-    */
 
     pfsApp -> im1PFSAppointmentsManagement {
         title 'Allow Patient to manage their GP appointments'
@@ -295,12 +463,100 @@ model {
 
     }
 
+    outboundReferrals -> uecDoS {
+        title 'Find service providers'
+        technology '???'
+    }
+
     outboundReferrals -> foundationSystemDatabase 'Read/Write data'
     im1PracticeReferrals -> foundationSystemDatabase 'Read/Write data'
 
 
     //PIM
     pfsApp -> im1PFSGetRecord 'Allow Patient to view their GP record'
+    im1PFSGetRecord -> foundationSystemDatabase 'Read data'
+    pfsApp -> im1PFSCommunicateWithPractice 'Allow Patient to message the GP practice'
+    im1PFSCommunicateWithPractice -> foundationSystemDatabase 'Read/Write data'
+    pfsApp -> gpConnectPFSGetRecord 'Allow Patient to view their GP record'
+    gpConnectPFSGetRecord -> foundationSystemDatabase 'Read data'
+    pfsApp -> gpConnectPFSPermissions 'Manage patient permissions for PFS services'
+    gpConnectPFSPermissions -> foundationSystemDatabase 'Read/Write data'
 
+    inPracticeSystem -> im1PracticePatientInformationMaintenance {
+        title 'Manage GP patient record'
+        technology 'Bespoke'
+    }
+
+    im1PracticePatientInformationMaintenance -> foundationSystemDatabase 'Read/Write data'
+
+    hcpClinicalApplication -> gpConnectAccessDocument {
+        navigateTo gpConnectAccessRecordStructuredView
+        title 'Retrieve unstructed documents from the GP record relating to the patient'
+        technology 'FHIR STU3 - CareConnect'
+    }
+    gpConnectAccessDocument -> foundationSystemDatabase 'Read Data'
+
+    hcpClinicalApplication -> gpConnectAccessRecordStructured {
+        navigateTo gpConnectAccessRecordStructuredView
+        title 'Retrieve structed/coded GP record'
+        technology 'FHIR STU3 - CareConnect'
+    }
+    gpConnectAccessRecordStructured -> foundationSystemDatabase 'Read data'
+
+    hcpClinicalApplication -> gpConnectAccessRecordHTML {
+        navigateTo gpConnectAccessRecordHTMLView
+        title 'Retrieve human readable view of patient record'
+        technology 'FHIR DSTU2'
+    }
+    gpConnectAccessRecordHTML -> foundationSystemDatabase 'Read data'
+    
+    scrComponent -> scr  {
+        title 'Upload SCRs on record updates'
+        technology 'HL7v3 or FHIR'
+    }
+    scrComponent -> foundationSystemDatabase 'Read data'
+    scr -> scrComponent {
+        title 'Retrieve SCRs for patients at other practices'
+        technology 'HL7v3 or FHIR'
+    }
+
+    meshClient -> mesh 'Retrieve MESH messages'
+    meshClient -> messageDistributer 'Distribute messages'
+    messageDistributer -> genericFHIRReceive 'Pass ITK3 messages'
+    genericFHIRReceive -> tocITK3 'Handle Transfer of Care ITK3 messages'
+    genericFHIRReceive -> gpConnectSendDocument 'Handle GP Connect Send Doc ITK3 messages'
+    genericFHIRReceive -> gpConnectUpdateRecord 'Handle GP Connect update record ITK3 messages'
+    genericFHIRReceive -> digitalMedsITK3 'Handle Digtial Meds ITK3 messages'
+
+    messageDistributer -> EdifactMessageHandler 'Pass Edifact Pathology and Screening Messages'
+    
+
+
+    tocITK3 -> foundationSystemDatabase 'Write data'
+    gpConnectSendDocument -> foundationSystemDatabase 'Write data'
+    gpConnectUpdateRecord -> foundationSystemDatabase 'Write data'
+    gpConnectUpdateRecord -> foundationSystemDatabase 'Write data'
+    digitalMedsITK3 -> foundationSystemDatabase 'Write data'
+    EdifactMessageHandler -> foundationSystemDatabase 'Write data'
+
+    OneOneOneCallCentre -> pem111 {
+        title '111 PEM'
+        technology 'CDA'
+    }
+    pem111 -> foundationSystemDatabase 'Write data'
+
+    mnsEventHandler -> gpRegistration 'Initiate GP Registration'
+    gpRegistration -> gp2gp 'Initiate patient record transfer'
+    gpRegistration -> gpRegistrationSystem 'Retrieve patient registraiton form'
+
+    gpRegistration -> pcrm {
+        //navigateTo pcrmView
+        title 'Register/Deduct patients'
+        technology 'Edifact, GPLinks'
+    } 
+    
+
+
+    
 }
 

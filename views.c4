@@ -29,6 +29,13 @@ views {
         include *
         include foundationSystem
     }
+
+    view of foundationSystem.dsicPatientInformationMaintenanceGP {
+        title 'DSIC Patient Information Maintenance - GP'
+        include *
+        include foundationSystem
+
+    }
     
     view AppointmentsManagement {
         include element.tag = #appointments

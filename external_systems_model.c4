@@ -112,4 +112,39 @@ model {
         title 'Booking and Referral Standard (BaRS)'
         summary 'Bookings and Referrals across care settings'
     }
+
+    mhs = externalSystem {
+        title 'Spine Message Handling Service (MHS)'
+        summary 'Send HL7v3 messages'
+    }
+
+    scr = externalSystem {
+        title 'Summary Care Record (SCR)'
+        summary 'GP Record Summaries'
+    }
+
+    mns = externalSystem {
+        title 'Multicast Notification Service (MNS)'
+        summary 'Publish and receive patient-related state changes from a single centralised system'
+    }
+
+    OneOneOneCallCentre = externalSystem {
+        title '111 Call Centre'
+        summary 'Handles 111 calls and provides post event summaries to GP and Pharmacy'
+    }
+
+    gpRegistrationSystem = externalSystem {
+        title 'Register with a GP surgery service'
+        summary 'This service is for healthcare workers to take patient registrations online quickly and easily'
+    }
+
+    pcrm = externalSystem {
+        title 'Primary Care Registration Management (PCRM)'
+        summary 'Primary Care Registration Management (PCRM) is a back-end service that enables patients to register with a GP practice'
+    }
+
+    pharmacyConsultationServices = externalSystem {
+        title 'Community Pharmacy Consultation Services'
+        summary 'Record Consultations within a community pharmacy setting'
+    }
 }
