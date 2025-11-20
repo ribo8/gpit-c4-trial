@@ -36,6 +36,18 @@ views {
         include foundationSystem
 
     }
+
+    view of foundationSystem.dsicResourceManagementGP {
+        title 'DSIC Resource Management'
+        include *
+        include foundationSystem
+    }
+
+    view of foundationSystem.dsicConsultationManagementGP {
+        title 'DSIC Consultation Management - GP'
+        include *
+        include foundationSystem
+    }
     
     view AppointmentsManagement {
         include element.tag = #appointments

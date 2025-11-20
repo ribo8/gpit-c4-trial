@@ -1,10 +1,10 @@
 model {
-    losingPractice = system {
-        title 'Losing practice'
+    losingPractice = externalSystem {
+        title 'GP Foundation System - Losing practice'
     }
 
-    winningPractice = system {
-        title 'Winning Practice'
+    winningPractice = externalSystem {
+        title 'GP Foundation System - Winning Practice'
     }
 
 

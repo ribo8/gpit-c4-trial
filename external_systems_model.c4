@@ -147,4 +147,16 @@ model {
         title 'Community Pharmacy Consultation Services'
         summary 'Record Consultations within a community pharmacy setting'
     }
+
+    gp2gpDashboard = externalSystem {
+        title 'GP Registrations Data Platform'
+        summary 'Platform to find data about GP2GP transfers for GP surgeries.'
+    }
+
+    electronicYellowCardReporting = externalSystem {
+        title 'Electronic Yellow Card Reporting'
+        summary 'Collecting reports of suspected adverse drug reactions (ADRs) via the Yellow Card Scheme.'
+
+    }
+    
 }

@@ -317,6 +317,50 @@ model {
             }
 
         }
+
+        dsicResourceManagementGP = gpfoundationModule {
+             title 'DSIC Patient Information Management - GP'
+            summary 'Logical view of the capability'
+
+            component im1PracticeResourceManagement {
+                title 'IM1 Practice - Resource Management'
+                summary 'Allow in-practice systems integration with the foundation system to view staff'
+            }
+        }
+
+
+        dsicConsultationManagementGP = gpfoundationModule {
+            title 'DSIC Consultation Management - GP'
+            summary 'Logical view of the capability'
+
+            component fgmExtract {
+                title 'Female Genital Multilation (FGM) Extract'
+                summary ''
+
+            } 
+
+            component yellowCareReporting {
+                title 'Electronic Yellow Care Reporting'
+                summary ''
+            }
+
+            component fitNotes {
+                title 'eMED3 fit notes'
+                summary ''
+            }
+
+            component templateManagement {
+                title 'Template Management'
+                summary ''
+            }
+
+            component callRecall {
+                title 'Call/Recall'
+                summary ''
+            }
+        }
+
+    
     }
     
 
@@ -548,15 +592,49 @@ model {
     mnsEventHandler -> gpRegistration 'Initiate GP Registration'
     gpRegistration -> gp2gp 'Initiate patient record transfer'
     gpRegistration -> gpRegistrationSystem 'Retrieve patient registraiton form'
+    gp2gp -> foundationSystemDatabase 'Read/Write data'
 
     gpRegistration -> pcrm {
         //navigateTo pcrmView
         title 'Register/Deduct patients'
         technology 'Edifact, GPLinks'
     } 
-    
+    gp2gp -> losingPractice {
+        navigateTo normalGP2GP
+        title 'Retrieve patient record'
+    }
 
+    winningPractice -> gp2gp {
+        navigateTo normalGP2GP
+        title 'Retrieve patient record'
+    }
 
+    gp2gp -> gpRegistrationsMI {
+        title 'Provide GP2GP MI information'
+    }
     
+    gpRegistrationsMI -> gp2gpDashboard {
+        title 'Provide GP2GP MI information'
+        technology 'JSON, RESTful'
+    }
+
+    // resource management
+    inPracticeSystem -> im1PracticeResourceManagement {
+        title 'View Staff list'
+        technology 'Bespoke'
+    }
+    im1PracticeResourceManagement -> foundationSystemDatabase 'Read/Write Data'
+
+    //consultation management
+    fgmExtract -> foundationSystemDatabase 'Read data'
+    fitNotes -> foundationSystemDatabase 'Read/Write data'
+    templateManagement -> foundationSystemDatabase 'Read/Write data'
+    callRecall -> foundationSystemDatabase 'Read/Write data'
+    yellowCareReporting -> foundationSystemDatabase 'Read data'
+    
+    yellowCareReporting -> electronicYellowCardReporting {
+        title 'Provide Adverse Drug Reactions'
+        technology 'SOAP, XML'
+    }
 }
 
